@@ -1,9 +1,9 @@
 #include "Node.h"
+using namespace std;
 
-Node::Node(int k, Data *d)
+Node::Node(int k)
 {
 	index = k;
-	data = d;
 }
 
 void Node::addParent(int x)
@@ -16,6 +16,11 @@ void Node::initTable(int x)
 	table.reserve(x);
 	for(int i=0;i<x;++i)
 		table.push_back(-1);
+}
+
+void Node::addValue(string s)
+{
+	values.push_back(s);
 }
 
 void Node::initTable(std::vector<float> x)
