@@ -9,5 +9,5 @@ class Data
 	std::map<int, int> size;
 	int i;
 	Data();
-	void addVar(std::string s, int k);
+	int addVar(std::string s, int k);
 };

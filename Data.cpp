@@ -6,9 +6,9 @@ Data::Data()
 	i = 0;
 }
 
-void Data::addVar(string s, int k)
+int Data::addVar(string s, int k)
 {
 	index.insert({s, i});
 	size.insert({i, k});
-	++i;
+	return i++;
 }
