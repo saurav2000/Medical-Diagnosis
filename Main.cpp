@@ -30,7 +30,7 @@ int parse(char *file_name)
 			for(int i=0;i<nVar;++i)
 			{
 				fin>>s;
-				node->addValue(s.substr(1, s.size()-2));
+				node->addValue(s);
 			}
 			for(int i=0;i<8;++i)
 				fin>>s;
@@ -43,17 +43,16 @@ int parse(char *file_name)
 			while(s[0]!=')')
 			{
 				fin>>s;
-				temp.push_back(s.substr(1, s.size()-2));
+				temp.push_back(s);
 			}
 			Node *node = nodes[data->index[temp[0]]];
 			for(int i=1;i<temp.size()-1;++i)
-				node->addParent(data->index[temp[i]]);
+				node->addParent(nodes[data->index[temp[i]]]);
 			for(int i=0;i<5;++i)
 				fin>>s;
 			node->initTable(stoi(s));
-			getline(fin, s);
-			getline(fin, s);
-			getline(fin, s);
+			for(int i=0;i<5;++i)
+				getline(fin, s);
 		}
 		else if(s[0]=='n')
 		{
@@ -64,15 +63,46 @@ int parse(char *file_name)
 			getline(fin, s);
 	}
 
+	for(int i=0;i<nodes.size();++i)
+		nodes[i] -> makeSizes();
+
 	fin.close();
 	return 404;
 }
 
 int learn(char *file_name)
 {
+	int n = nodes.size();
 	fin.open(file_name);
+	vector<vector<string> > data;
+	map<int, int> unknown;
+	data.reserve(12000);
+	int cnt = 0;
+	while(!fin.eof())
+	{
+		vector<string> temp(n);
+		for(int i=0;i<n;++i)
+		{
+			fin>>temp[i];
+			if(temp[i] == "?")
+				unknown[cnt] = i;
+		}
+		
+		++cnt;
+		data.push_back(temp);
+	}
 
-
+	for(int j=0;j<data.size();++j)
+	{
+		for(int i=0;i<n;++i)
+		{
+			vector<string> v;
+			v.push_back(data[j][i]);
+			for(int j=0;j<nodes[i]->parents.size();++j)
+				v.push_back(data[j][nodes[i]->parents[j]->index]);
+			nodes[i]->dealWith(v);	
+		}
+	}
 
 	fin.close();
 	return 405;
