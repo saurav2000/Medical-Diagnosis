@@ -9,6 +9,7 @@ vector<Node*> nodes;
 Data *data;
 char *input_name;
 vector<vector<string> > records;
+int SWEEP_IT;
 
 void parse()
 {
@@ -122,7 +123,7 @@ void learn(char *file_name)
 		nodes[i]->initCPT();
 
 
-	for(int k=0;k<2;++k)
+	for(int k=0;k<SWEEP_IT;++k)
 	{
 		for(auto it = unknown.begin(); it!=unknown.end();++it)
 		{
@@ -140,9 +141,11 @@ void output()
 {
 	fin.open(input_name);
 	string s;
+	int sum = 0;
 	while(!fin.eof())
 	{
 		getline(fin,s);
+		if(s=="") continue;
 		if(s[0]=='p')
 		{
 			printf("%s\n\ttable ", s.c_str());
@@ -152,13 +155,14 @@ void output()
 			Node *n = nodes[data->index[temp]];
 			for(int i=0;i<n->CPT.size();++i)
 				printf("%f ", n->CPT[i]);
+			sum+=n->CPT.size();
 			printf(";\n");
 			getline(fin,s);
 		}
 		else
 			printf("%s\n", s.c_str());
 	}
-
+	cout<<sum<<"\n";
 	fin.close();
 }
 
@@ -166,6 +170,7 @@ int main(int argc, char **argv)
 {
 	//REMOVE 404 405 and 406 at the end
 	input_name = argv[1];
+	SWEEP_IT = stoi(argv[3]);
 	data = new Data();
 	parse();
 	learn(argv[2]);

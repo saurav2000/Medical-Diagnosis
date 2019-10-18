@@ -1,7 +1,7 @@
 #include "Node.h"
 using namespace std;
 
-float ALPHA = 0.1;
+float ALPHA = 0.1, DELTA = 1e-4;
 
 Node::Node(int k)
 {
@@ -36,28 +36,30 @@ void Node::initTables(int x)
 void Node::initCPT()
 {
 	observeCount = initObserveCount;
-	this->evalCPT();
+	// this->evalCPT();
+	for(int i=0;i<CPT.size();++i)
+		CPT[i] = 1.0/valueCount;
 }
 
 void Node::evalCPT()
 {
 	int s = sizes[0], n = CPT.size();
-	float sum[s] = {0.0}, alpha = 0;
+	float sum[s] = {0.0}, alpha = ALPHA;
 	
-	for(int i=0;i<n;++i)
-	{
-		if(observeCount[i]==0)
-		{
-			alpha = ALPHA;
-			break;
-		}
-	}
+	// for(int i=0;i<n;++i)
+	// {
+	// 	if(observeCount[i]<DELTA)
+	// 	{
+	// 		alpha = ALPHA;
+	// 		break;
+	// 	}
+	// }
 
-	cout<<"\n"<<index<<"\n";
+	// cout<<"\n"<<index<<"\n";
 	for(int i=0;i<n;++i)
 	{
 		observeCount[i]+=alpha;
-		cout<<observeCount[i]<<"\n";
+		// cout<<observeCount[i]<<"\n";
 		sum[i%s]+=observeCount[i];
 	}
 	for(int i=0;i<n;++i)
