@@ -1,7 +1,7 @@
 #include "Node.h"
 using namespace std;
 
-float ALPHA = 0.1, DELTA = 1e-4;
+double DELTA = 10.0;
 
 Node::Node(int k)
 {
@@ -36,36 +36,30 @@ void Node::initTables(int x)
 void Node::initCPT()
 {
 	observeCount = initObserveCount;
-	// this->evalCPT();
-	for(int i=0;i<CPT.size();++i)
-		CPT[i] = 1.0/valueCount;
+	this->evalCPT(1);
+	// for(int i=0;i<sizes[0];++i)
+		// CPT[i] = 1.0;
 }
 
-void Node::evalCPT()
+void Node::evalCPT(double ALPHA)
 {
 	int s = sizes[0], n = CPT.size();
-	float sum[s] = {0.0}, alpha = ALPHA;
+	double sum[s] = {0.0}, alpha = 0;
 	
-	// for(int i=0;i<n;++i)
-	// {
-	// 	if(observeCount[i]<DELTA)
-	// 	{
-	// 		alpha = ALPHA;
-	// 		break;
-	// 	}
-	// }
+	for(int i=0;i<n;++i)
+		sum[i%s]+=observeCount[i];
 
-	// cout<<"\n"<<index<<"\n";
 	for(int i=0;i<n;++i)
 	{
-		observeCount[i]+=alpha;
-		// cout<<observeCount[i]<<"\n";
-		sum[i%s]+=observeCount[i];
+		if(observeCount[i]<=10)
+			alpha = ALPHA;
 	}
+
 	for(int i=0;i<n;++i)
-		CPT[i] = observeCount[i] / sum[i%s];
+		CPT[i] = (observeCount[i] + alpha) / (sum[i%s] + valueCount*alpha);
 	
-	observeCount = initObserveCount;
+	
+	// observeCount = initObserveCount;
 }
 
 void Node::addValue(string s)
@@ -73,7 +67,7 @@ void Node::addValue(string s)
 	values[s] = valueCount++;
 }
 
-void Node::initObserveTable(vector<string> s)
+void Node::initObserveTable(vector<string> &s)
 {
 	for(int i=0;i<s.size();++i)
 	{
@@ -102,7 +96,7 @@ void Node::addUnknownObserve(vector<string> &s, int unknown)
 			sizei = i;
 	}
 
-	int val = (sizei==0)?valueCount:parents[sizei-1]->valueCount;
+	int val = (sizei==0) ? valueCount : parents[sizei-1]->valueCount;
 	for(int i=0;i<val;++i)
 	{
 		int temp = res+sizes[sizei]*i;
