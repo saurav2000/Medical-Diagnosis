@@ -128,12 +128,14 @@ void learn(char *file_name)
 		for(auto it = unknown.begin(); it!=unknown.end();++it)
 		{
 			vector<int> *v = it->second;
-			for(int i=v->size()-1;i>=0;--i)
+			for(int i=0;i<v->size();++i)
 				nodes[(*v)[i]]->addUnknownObserve(records[it->first], questionMark[it->first]);
+			
+			for(int i=0;i<v->size();++i)
+				nodes[(*v)[i]]->evalCPT(0.1);
 		}
-
 		for(int i=0;i<n;++i)
-			nodes[i]->evalCPT();
+			nodes[i]->observeCount = nodes[i]->initObserveCount;
 	}
 }
 
@@ -162,7 +164,7 @@ void output()
 		else
 			printf("%s\n", s.c_str());
 	}
-	cout<<sum<<"\n";
+	// cout<<sum<<"\n";
 	fin.close();
 }
 
