@@ -1,1 +1,1 @@
-./nebulizer $1 $2 $3 > solved_alarm.bif
+./nebulizer $1 $2 > solved_alarm.bif

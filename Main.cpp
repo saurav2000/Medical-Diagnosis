@@ -2,7 +2,9 @@
 #include "Data.h"
 #include <iostream>
 #include <fstream>
+#include <chrono>
 using namespace std;
+using namespace std::chrono;
 
 ifstream fin;
 vector<Node*> nodes;
@@ -122,8 +124,8 @@ void learn(char *file_name)
 	for(int i=0;i<n;++i)
 		nodes[i]->initCPT();
 
-
-	for(int k=0;k<SWEEP_IT;++k)
+	duration<double> time_span = duration_cast<duration<double> >(high_resolution_clock::now() - high_resolution_clock::now());
+	for(auto start=high_resolution_clock::now() ;time_span.count()<10;time_span = duration_cast<duration<double> >(high_resolution_clock::now() - start))
 	{
 		for(auto it = unknown.begin(); it!=unknown.end();++it)
 		{
@@ -172,7 +174,6 @@ int main(int argc, char **argv)
 {
 	//REMOVE 404 405 and 406 at the end
 	input_name = argv[1];
-	SWEEP_IT = stoi(argv[3]);
 	data = new Data();
 	parse();
 	learn(argv[2]);
